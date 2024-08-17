@@ -5,7 +5,7 @@ public class ChatGepeto {
     private int pontoPartida;
 
     public ChatGepeto(){
-        this.nome = "Chat-gepeto";
+        this.nome = "Chat-Gepeto";
         this.pontoPartida = 0;
     }
 

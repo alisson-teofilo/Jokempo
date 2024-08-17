@@ -1,36 +1,59 @@
 public class Placar {
 
-    private int vitorias;
-    private int derrotas;
-    private int empates;
+    private int vitoriaRodada;
+    private int derrotaRodada;
+
+    private int vitoriasPartida;
+    private int derrotasPartida;
+    private int empatesPartida;
 
     // inicar o jogo com o placar 0 x 0
     public Placar(){
-        this.vitorias = 0;
-        this.derrotas = 0;
+        this.derrotaRodada = 0;
+        this.vitoriaRodada = 0;
+
+        this.vitoriasPartida = 0;
+        this.derrotasPartida = 0;
+        this.empatesPartida = 0;
     }
 
-    public int getVitorias() {
-        return vitorias;
+    public int getVitoriaRodada() {
+        return vitoriaRodada;
     }
 
-    public void setVitorias(int vitorias) {
-        this.vitorias += vitorias;
+    public void setVitoriaRodada(int vitoriaRodada) {
+        this.vitoriaRodada += vitoriaRodada;
     }
 
-    public int getDerrotas() {
-        return derrotas;
+    public int getDerrotaRodada() {
+        return derrotaRodada;
     }
 
-    public void setDerrotas(int derrotas) {
-        this.derrotas += derrotas;
+    public void setDerrotaRodada(int derrotaRodada) {
+        this.derrotaRodada += derrotaRodada;
     }
 
-    public int getEmpates() {
-        return empates;
+    public int getVitoriasPartida() {
+        return vitoriasPartida;
     }
 
-    public void setEmpates(int empates) {
-        this.empates += empates;
+    public void setVitoriasPartida(int vitoriasPartida) {
+        this.vitoriasPartida += vitoriasPartida;
+    }
+
+    public int getDerrotasPartida() {
+        return derrotasPartida;
+    }
+
+    public void setDerrotasPartida(int derrotasPartida) {
+        this.derrotasPartida += derrotasPartida;
+    }
+
+    public int getEmpatesPartida() {
+        return empatesPartida;
+    }
+
+    public void setEmpatesPartida(int empatesPartida) {
+        this.empatesPartida += empatesPartida;
     }
 }
