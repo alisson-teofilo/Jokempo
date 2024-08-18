@@ -17,6 +17,7 @@ public class Main {
 
         // declaração de variáveis
         int opcaoMenu = 0;
+        String nome = null;
         Scanner entrada = new Scanner(System.in);
         do {
 
@@ -32,18 +33,24 @@ public class Main {
 
             if(opcaoMenu == 1) {
 
-                // instancia o usuário e inicia o placar
-                System.out.print("\n");
-                System.out.println("Qual o seu nome?");
-                String nome = entrada.next();
+                if(Main.usuario == null) {
+                    System.out.print("\n");
+                    System.out.println("Qual o seu nome?");
+                     nome = entrada.next();
+                }
 
+                // instancia o usuário e inicia o placar
                 Usuario usuario = new Usuario(nome);
 
                 // inicia o jogo
-                System.out.print("\n");
-                System.out.println("Escolha quantas rodadas deve ter a partida: 1, 3, 5 ou 7");
+                int qtdRodadas;
+                do {
 
-                int qtdRodadas = entrada.nextInt();
+                    System.out.print("\n");
+                    System.out.println("Escolha quantas partidas deve ter a rodada: 1, 3, 5 ou 7");
+                    qtdRodadas = entrada.nextInt();
+
+                } while(qtdRodadas != 1 && qtdRodadas != 3 && qtdRodadas != 5 && qtdRodadas != 7);
 
                 for(int i = 0; i < qtdRodadas; i++){
 
@@ -52,16 +59,18 @@ public class Main {
 
                 }
 
-                processarResultadoPartida(qtdRodadas);
+                processarResultadoPartida(qtdRodadas, entrada);
 
-                System.out.println("Aperte ENTER para voltar ao Menu Principal...");
-
-                // limpa buffer e aguar ação do usuário
-                entrada.nextLine();
-                entrada.nextLine();
+                // aguarda interação do usuário
+                pausarFluxo(entrada);
 
             } else if (opcaoMenu == 2) {
+
                 exibePlacarFinal(usuario, chatGepeto);
+
+                // aguarda interação do usuário
+                pausarFluxo(entrada);
+
             } else if(opcaoMenu == 3) {
                 System.out.println("Jogo finalizado!");
             } else {
@@ -72,18 +81,24 @@ public class Main {
 
     }
 
-    private static void iniciarJogo(Scanner entrada, Usuario usuario, int numeroRodada) {
 
-        System.out.print("\n");
+    private static void iniciarJogo(Scanner entrada, Usuario usuario, int numeroRodada) {
         int escolhaJogador;
 
+        do {
+            System.out.print("\n");
+            escolhaJogador = 0;
+
+            // usuário deve escolher entre as opções
+            System.out.println("Escolha um número: 1 - PEDRA, 2 - PAPEL, 3 - TESOURA");
+
+            escolhaJogador = entrada.nextInt();
+
+        } while (escolhaJogador < 1 || escolhaJogador > 3);
+
+        System.out.print("\n");
         System.out.printf("%d° RODADA", numeroRodada + 1);
         System.out.print("\n");
-
-        // usuário deve escolher entre as opções
-        System.out.println("Escolha um número: 1 - PEDRA, 2 - PAPEL, 3 - TESOURA");
-
-        escolhaJogador = entrada.nextInt();
 
         System.out.print("\n");
         System.out.println("## ESCOLHA DOS JOGADORES ##");
@@ -133,9 +148,7 @@ public class Main {
         if(usuario.escolhaJogador.equals(chatGepeto.escolhaChat)) {
             placarUsuario.setEmpatesPartida(1);
             placarChatgepeto.setEmpatesPartida(1);
-        }
-
-        else {
+        } else {
 
             switch (usuario.escolhaJogador) {
 
@@ -177,7 +190,7 @@ public class Main {
         // valida se não foi empate
         if(!usuario.escolhaJogador.equals(chatGepeto.escolhaChat)) {
 
-            // acrescenta pontuação ao placar da rodada
+            // acrescenta pontuação ao placar da partida
             if(usuario.getPontoPartida() > chatGepeto.getPontoPartida()) {
                 placarUsuario.setVitoriasPartida(1);
                 placarChatgepeto.setDerrotasPartida(1);
@@ -191,6 +204,7 @@ public class Main {
     }
 
     public static void exibePontuacaoRodada(Usuario usuario, ChatGepeto chatGepeto) {
+        System.out.print("\n");
 
         // compara o número de vitória e determina o ganhador da rodada.
         if(usuario.getPontoPartida() == chatGepeto.getPontoPartida()){
@@ -198,9 +212,8 @@ public class Main {
         } else {
 
             // informa o ganhador da partida
-            System.out.print("\n");
-            System.out.printf("%s GANHA DE %s", placarUsuario.getVitoriasPartida() == 1 ? usuario.escolhaJogador.toUpperCase() : chatGepeto.escolhaChat.toUpperCase(),
-                    placarChatgepeto.getDerrotaRodada() == 1 ? chatGepeto.escolhaChat.toUpperCase() : usuario.escolhaJogador.toUpperCase());
+            System.out.printf("%s GANHA DE %s", usuario.getPontoPartida() == 1 ? usuario.escolhaJogador.toUpperCase() : chatGepeto.escolhaChat.toUpperCase(),
+                    chatGepeto.getPontoPartida() == 0 ? chatGepeto.escolhaChat.toUpperCase() : usuario.escolhaJogador.toUpperCase());
 
             System.out.println("\n");
             System.out.println("O GANHADOR É: " + (usuario.getPontoPartida() > chatGepeto.getPontoPartida() ? usuario.nome : chatGepeto.nome));
@@ -215,14 +228,13 @@ public class Main {
         chatGepeto.setPontoPartida(0);
     }
 
-    private static void processarResultadoPartida(int qtdRodadas) {
+    private static void processarResultadoPartida(int qtdRodadas, Scanner entrada) {
         placarRodada(qtdRodadas);
     }
 
     public static void placarPartida(Usuario usuario, ChatGepeto chatGepeto) {
 
         System.out.println("PONTUAÇÃO DA PARTIDA: ");
-        System.out.print("\n");
         System.out.printf("Jogador(a) %s: vitórias: %d, empates: %d, derrotas: %d.", usuario.nome, placarUsuario.getVitoriasPartida(), placarUsuario.getEmpatesPartida(), placarUsuario.getDerrotasPartida());
         System.out.print("\n");
         System.out.printf("Jogador %s: vitórias: %d, empates: %d, derrotas: %d.", chatGepeto.nome, placarChatgepeto.getVitoriasPartida(), placarChatgepeto.getEmpatesPartida(), placarChatgepeto.getDerrotasPartida());
@@ -230,33 +242,62 @@ public class Main {
     }
 
     public static void placarRodada(int qtdRodadas){
+        // valida se houve empate
+        if(placarUsuario.getVitoriasPartida() == placarChatgepeto.getVitoriasPartida()
+                && placarUsuario.getEmpatesPartida() == placarChatgepeto.getEmpatesPartida()
+                && placarUsuario.getDerrotasPartida() == placarChatgepeto.getDerrotasPartida()){
+            System.out.println("NÃO A GANHADOR NA RODADA \nHOUVE O MESMO NÚMERO DE VITÓRIAS, EMPATES E DERROTAS");
 
-        // processa todas as todadas da partida
-        if(placarUsuario.getVitoriasPartida() > placarChatgepeto.getVitoriasPartida()){
-            placarUsuario.setVitoriaRodada(1);
-            placarChatgepeto.setDerrotaRodada(1);
-        } else {
-            placarChatgepeto.setVitoriaRodada(1);
-            placarUsuario.setDerrotaRodada(1);
+        }else {
+
+            if (placarUsuario.getVitoriasPartida() > placarChatgepeto.getVitoriasPartida()) {
+                placarUsuario.setVitoriaRodada(1);
+                placarChatgepeto.setDerrotaRodada(1);
+            } else {
+                placarChatgepeto.setVitoriaRodada(1);
+                placarUsuario.setDerrotaRodada(1);
+            }
+
+            // soma as partidas
+            System.out.println("##### GANHADOR(A) DA RODADA #####");
+            System.out.printf("COM %d VITÓRIAS, %s É O VENCEDOR DA MELHOR DE %d. PARABÉNS!"
+                    , Math.max(placarUsuario.getVitoriasPartida(), placarChatgepeto.getVitoriasPartida())
+                    , placarUsuario.getVitoriasPartida() > placarChatgepeto.getVitoriasPartida() ? usuario.nome : chatGepeto.nome
+                    , qtdRodadas);
         }
 
-        System.out.println("\n");
-        System.out.println("##### GANHADOR(A) DA RODADA #####");
-        System.out.printf("COM %d VITÓRIAS, %s É O VENCEDOR DA MELHRO DE %d. PARABÉNS!"
-                , Math.max(placarUsuario.getVitoriasPartida(), placarChatgepeto.getVitoriasPartida())
-                , placarUsuario.getVitoriasPartida() > placarChatgepeto.getVitoriasPartida() ? usuario.nome : chatGepeto.nome
-                , qtdRodadas);
     }
 
     public static void exibePlacarFinal(Usuario usuario, ChatGepeto chatGepeto) {
 
-//        System.out.println("################## PLACAR FINAL ##################");
-//        System.out.println("\n");
-//        System.out.printf(" %s: total de vitórias: %d, total de empates: %d, total de derrotas: %d.", usuario.nome, placarUsuario.getVitorias(), placarUsuario.getEmpates(), placarUsuario.getDerrotas());
-//        System.out.print("\n");
-//        System.out.printf("Jogador %s: total de vitórias: %d, total de empates: %d, total de derrotas: %d.", chatGepeto.nome, placarChatgepeto.getVitorias(), placarChatgepeto.getEmpates(), placarChatgepeto.getDerrotas());
-//        System.out.println("\n");
+        int totalPartidas = placarUsuario.getVitoriasPartida() + placarUsuario.getDerrotasPartida() + placarUsuario.getEmpatesPartida();
+
+        System.out.println("\n");
+        System.out.println("################## PLACAR FINAL ##################");
+        System.out.printf("Total de partidas jogadas: %d.",  totalPartidas );
+        System.out.println("\n");
+        System.out.printf("Jogador(a) %s: \n", usuario.nome);
+        System.out.printf("Total de vitórias: %d, que equivale a %2f%% \n", placarUsuario.getVitoriasPartida(), (double) (placarUsuario.getVitoriasPartida() * 100) / totalPartidas);
+        System.out.printf("Total de empates: %d, que equivale a %2f%% \n" , placarUsuario.getEmpatesPartida(), (double) (placarUsuario.getEmpatesPartida() * 100) / totalPartidas);
+        System.out.printf("Total de derrotas: %d, que equivale a %2f%% \n", placarUsuario.getDerrotasPartida(), (double ) (placarUsuario.getDerrotasPartida() * 100) / totalPartidas);
+        System.out.print("\n");
+
+        System.out.printf("Jogador(a) %s: \n", chatGepeto.nome);
+        System.out.printf("Total de vitórias: %d, que equivale a %2f%% \n", placarChatgepeto.getVitoriasPartida(),(double) (placarChatgepeto.getVitoriasPartida() * 100) / totalPartidas);
+        System.out.printf("Total de empates: %d, que equivale a %2f%% \n" , placarChatgepeto.getEmpatesPartida(), (double) (placarChatgepeto.getEmpatesPartida() * 100) / totalPartidas);
+        System.out.printf("Total de derrotas: %d, que equivale a %2f%% \n", placarChatgepeto.getDerrotasPartida(), (double) (placarChatgepeto.getDerrotasPartida() * 100) / totalPartidas);
+        System.out.print("\n");
+        System.out.println("##################################################");
+
     }
 
+    private static void pausarFluxo(Scanner entrada) {
+        System.out.println("\n");
+        System.out.println("Aperte ENTER para voltar ao Menu Principal...");
+
+        // limpa buffer e aguar ação do usuário
+        entrada.nextLine();
+        entrada.nextLine();
+    }
 
 }

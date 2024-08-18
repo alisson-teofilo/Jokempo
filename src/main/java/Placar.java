@@ -15,6 +15,7 @@ public class Placar {
         this.vitoriasPartida = 0;
         this.derrotasPartida = 0;
         this.empatesPartida = 0;
+
     }
 
     public int getVitoriaRodada() {
@@ -56,4 +57,5 @@ public class Placar {
     public void setEmpatesPartida(int empatesPartida) {
         this.empatesPartida += empatesPartida;
     }
+
 }
