@@ -58,4 +58,8 @@ public class Placar {
         this.empatesPartida += empatesPartida;
     }
 
+    public void zerarPartida(){
+        this.vitoriasPartida = 0;
+    }
+
 }
